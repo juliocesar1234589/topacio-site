@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Editor Topacio</title>
+<style>
+body{font-family:Arial;padding:20px;}
+input,textarea{width:100%;margin-bottom:10px;padding:8px;}
+</style>
+</head>
+<body>
+<h2>Editor Simple</h2>
+<p>Cargá texto y foto, luego descargá la página actualizada.</p>
+
+<label>Título:</label>
+<input id="titleInput">
+
+<label>Descripción:</label>
+<textarea id="descInput"></textarea>
+
+<label>Imagen:</label>
+<input type="file" id="fileInput">
+
+<button onclick="generate()">Descargar página actualizada</button>
+
+<script>
+function generate(){
+  const title=document.getElementById('titleInput').value;
+  const desc=document.getElementById('descInput').value;
+  const file=document.getElementById('fileInput').files[0];
+
+  let reader=new FileReader();
+  reader.onload=function(){
+    const imgData=reader.result;
+    const html=`<!DOCTYPE html><html><head><meta charset='UTF-8'><title>${title}</title>
+    <style>body{background:#000;color:#fff;font-family:Arial;padding:20px;}img{max-width:100%;}</style>
+    </head><body><h1>${title}</h1><p>${desc}</p><img src='${imgData}'></body></html>`;
+
+    const blob=new Blob([html],{type:'text/html'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='index.html';
+    a.click();
+  };
+  reader.readAsDataURL(file);
+}
+</script>
+</body>
+</html>
